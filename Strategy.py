@@ -1,32 +1,19 @@
-from stuff.trade import Order
-from stuff.order_book import OrderBook
-from stuff.trading_state import TradingState
-from typing import List, Dict, Any
-import string
+class Order:
+    def __init__(self, symbol, price, quantity):
+        self.symbol = symbol
+        self.price = price
+        self.quantity = quantity
 
 class Trader:
+    def __init__(self):
+        self.buy_price = 9998
+        self.sell_price = 10002
+        self.quantity = 10
 
-    def run(self, state: TradingState):
-        result = {}
-
-        for product, order_book in state.order_depths.items():
-            orders: List[Order] = []
-            if product == "GOLD":
-                orders.append(Order(product, 9998, 30))
-                orders.append(Order(product, 10002, -30))
-            elif product == "SILVER":
-                orders.append(Order(product, 2020, 30))
-                orders.append(Order(product, 2040, -30))
-            elif product == "BRONZE":
-                orders.append(Order(product, 1919, 30))
-                orders.append(Order(product, 1940, -30))
-
-            result[product] = orders
-        
-        traderData = {
-            "Mid-prices-GOLD": [order.price for order in result.get("GOLD", [])],
-            "Mid-prices-SILVER": [order.price for order in result.get("SILVER", [])],
-            "Mid-prices-BRONZE": [order.price for order in result.get("BRONZE", [])]
-        }
-
-        return result, traderData
+    def run(self, state):
+        orders = []
+        if state.timestamp % 2 == 1:  # Odd timestamp: buy
+            orders.append(Order("PRODUCT", self.buy_price, self.quantity))
+        else:  # Even timestamp: sell
+            orders.append(Order("PRODUCT", self.sell_price, -self.quantity))
+        return {"PRODUCT": orders}, {}, "alternating_strategy"
