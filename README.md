@@ -22,7 +22,7 @@ python -m venv ./venv
 Activate the venv
 ```bash
 ./venv/Scripts/activate
-# or source ./venv/Scripts/activate
+# or source ./venv/bin/activate for Linux/macOS users
 ```
 
 #### Step 4: Install Dependencies
@@ -33,6 +33,11 @@ pip install -r requirements.txt
 #### Step 5: Run the GUI
 ```bash
 python GUI.py
+```
+
+## How to Update
+```bash
+git pull origin main
 ```
 
 ## Instructions to Run a Backtest
