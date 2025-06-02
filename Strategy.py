@@ -1,19 +1,32 @@
-class Order:
-    def __init__(self, symbol, price, quantity):
-        self.symbol = symbol
-        self.price = price
-        self.quantity = quantity
+# Do not remove this line
+from src.backtester import Order
 
+# Strategy.py must include the Trader class with a run() method
 class Trader:
-    def __init__(self):
-        self.buy_price = 9998
-        self.sell_price = 10002
-        self.quantity = 10
+    '''
+    INPUT:
+        - state: holds information about market trades, timestamps, position etc.,
+                 Some attributes may not be available right now. 
+    OUTPUT:
+        - results: Dict{"PRODUCT_NAME": List[Order]} 
+                   holds your orders for each product in a dictionary
+    '''
 
     def run(self, state):
+        
+        results = {}
         orders = []
-        if state.timestamp % 2 == 1:  # Odd timestamp: buy
-            orders.append(Order("PRODUCT", self.buy_price, self.quantity))
-        else:  # Even timestamp: sell
-            orders.append(Order("PRODUCT", self.sell_price, -self.quantity))
-        return {"PRODUCT": orders}, {}, "alternating_strategy"
+
+        # Hardcoded for now, you will decide this. This is not the optimal strategy
+        buy_price = 9998
+        sell_price = 10002
+
+        if state.timestamp % 2 == 1:
+            # Order("PRODUCT_NAME": str, price: int, quantity: int)
+            orders.append(Order("PRODUCT", buy_price, 10)) # Positive quantity -> Buy order
+        else:
+            orders.append(Order("PRODUCT", sell_price, -10)) # Negative quantity -> Sell order
+
+        results["PRODUCT"] = orders
+
+        return results
