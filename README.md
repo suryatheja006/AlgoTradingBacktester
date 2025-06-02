@@ -5,6 +5,8 @@ If you're unsure about using GitHub or Git please watch this [video](https://www
 
 ## How to Run
 
+Ensure you have [python](https://www.python.org/downloads/) and [git](https://git-scm.com/downloads) downloaded.
+
 #### Step 1: Clone the Repository. This will set `origin` to this repository automatically. 
 ```bash
 git clone https://github.com/Dhruv-x7x/AlgoTradingBacktester.git
