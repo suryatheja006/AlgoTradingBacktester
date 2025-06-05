@@ -1,32 +1,22 @@
-# Do not remove this line
-from src.backtester import Order
+from src.backtester import Order, OrderBook
+from typing import List
 
-# Strategy.py must include the Trader class with a run() method
 class Trader:
-    '''
-    INPUT:
-        - state: holds information about market trades, timestamps, position etc.,
-                 Some attributes may not be available right now. 
-    OUTPUT:
-        - results: Dict{"PRODUCT_NAME": List[Order]} 
-                   holds your orders for each product in a dictionary
-    '''
-
+    
     def run(self, state):
+        result = {}
         
-        results = {}
-        orders = []
+        orders: List[Order] = []
+        order_depth: OrderBook = state.order_depth
+        if len(order_depth.sell_orders) != 0:
+            best_ask, best_ask_amount = list(order_depth.sell_orders.items())[0]
+            if int(best_ask) < 10000:
+                orders.append(Order("PRODUCT", best_ask, -best_ask_amount))
 
-        # Hardcoded for now, you will decide this. This is not the optimal strategy
-        buy_price = 9998
-        sell_price = 10002
-
-        if state.timestamp % 2 == 1:
-            # Order("PRODUCT_NAME": str, price: int, quantity: int)
-            orders.append(Order("PRODUCT", buy_price, 10)) # Positive quantity -> Buy order
-        else:
-            orders.append(Order("PRODUCT", sell_price, -10)) # Negative quantity -> Sell order
-
-        results["PRODUCT"] = orders
-
-        return results
+        if len(order_depth.buy_orders) != 0:
+            best_bid, best_bid_amount = list(order_depth.buy_orders.items())[0]
+            if int(best_bid) > 10000:
+                orders.append(Order("PRODUCT", best_bid, -best_bid_amount))
+        
+        result["PRODUCT"] = orders
+        return result
