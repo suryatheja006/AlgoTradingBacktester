@@ -294,7 +294,7 @@ class Backtester:
             state = type("State", (), {})()
             state.timestamp = ts
             state.order_depth = self.orderbook
-            orders_dict = self.trader.run(state)
+            orders_dict = self.trader.run(state, self.position)
             orders = orders_dict.get("PRODUCT", [])
 
             self.match_orders(orders, market_trades)
