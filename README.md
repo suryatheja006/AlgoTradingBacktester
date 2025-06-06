@@ -9,7 +9,7 @@ Ensure you have [python](https://www.python.org/downloads/) and [git](https://gi
 
 #### Step 1: Clone the Repository. This will set `origin` to this repository automatically. 
 ```bash
-git clone https://github.com/Dhruv-x7x/AlgoTradingBacktester.git
+git clone https://github.com/suryatheja006/AlgoTradingBacktester.git
 ```
 
 #### Step 2: cd into it
