@@ -1,4 +1,4 @@
-# SOC 2025: Algorithmic Trading in Python
+# SOC 2025: TradeBotX
 
 This is the backtester you will be using to analyze the performance of your strategies. We will update this repository time to time so make sure you set it as upstream and keep fetching updates. 
 If you're unsure about using GitHub or Git please watch this [video](https://www.youtube.com/watch?v=vA5TTz6BXhY&ab_channel=TraversyMedia). 
