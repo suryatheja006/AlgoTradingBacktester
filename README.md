@@ -61,7 +61,7 @@ There are three sections on the GUI,
 - **Run Backtest**: Self-explanatory
 
 #### Status & Logs
-Will display any errors you might encounter during the backtesting. You may also find errors in the terminal. If you can't figure it out then ask a mentor.
+Will display any errors you might encounter during the backtesting. You may also find errors in the terminal.
 
 #### Interactive Results
 
@@ -69,4 +69,4 @@ Will display any errors you might encounter during the backtesting. You may also
 - **Performance Summary**: Self-explanatory. If it doesn't work, try again.
 - **Export Results**: Saves a csv file of your PnL.
 
-DM any mentor if you encounter an error, or post in the WA group chat.
+Reach out if you need help.
