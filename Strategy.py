@@ -4,8 +4,6 @@ import pandas as pd
 import numpy as np
 import statistics
 
-ABRA_PRICES = []
-
 # Base Class
 class BaseClass:
     def __init__(self, product_name, max_position):
