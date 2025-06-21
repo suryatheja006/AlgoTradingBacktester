@@ -6,8 +6,5 @@ __pycache__/
 # Ignore venv
 venv/
 
-# Stay tuned :D
-stay_tuned/
-
 # VSCode settings (optional)
 .vscode/

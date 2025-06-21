@@ -1,27 +1,75 @@
 from src.backtester import Order, OrderBook
 from typing import List
+import pandas as pd
+import numpy as np
+import statistics
+
+ABRA_PRICES = []
+
+# Base Class
+class BaseClass:
+    def __init__(self, product_name, max_position):
+        self.product_name = product_name
+        self.max_position = max_position
+    
+    def get_orders(self, state, orderbook, position):
+        """Override this method in product-specific strategies"""
+        return []
+
+class SudowoodoStrategy(BaseClass):
+    def __init__(self):
+        super().__init__("SUDOWOODO", 50)
+        self.fair_value = 10000
+    
+    def get_orders(self, state, orderbook, position):
+        orders = []
+        
+        if not orderbook.buy_orders and not orderbook.sell_orders:
+            return orders
+        
+        orders.append(Order(self.product_name, self.fair_value + 2, -10))
+        orders.append(Order(self.product_name, self.fair_value - 2, 10))
+
+        return orders
+
+class DrowzeeStrategy(BaseClass):
+    def __init__(self):
+        super().__init__("DROWZEE", 50)
+    
+    def get_orders(self, state, orderbook, position):
+        orders = []
+        
+        # LOGIC FOR DROWZEE
+        
+        return orders
+
+class AbraStrategy(BaseClass):
+    def __init__(self):
+        super().__init__("ABRA", 50)
+        self.reversion_window = 200
+        
+    def get_orders(self, state, orderbook, position):
+        orders = []
+
+        # LOGIC FOR ABRA
+        
+        return orders
 
 class Trader:
-    '''
-    state: 
-    - state.timestamp: Int
-    - state.order_depth: OrderBook
-    current_position: Int
-    '''
-    def run(self, state, current_position):
-        result = {} # stores your orders
-
-        orders: List[Order] = [] # append Order objects to the list
-        order_depth: OrderBook = state.order_depth # get orderbook (has sell and buy orders)
-        if len(order_depth.sell_orders) != 0:
-            best_ask, best_ask_amount = list(order_depth.sell_orders.items())[0] # assuming it is already sorted, you can sort it using sorted()
-            if int(best_ask) < 10000:
-                orders.append(Order("PRODUCT", best_ask, -best_ask_amount)) # buy order
-
-        if len(order_depth.buy_orders) != 0:
-            best_bid, best_bid_amount = list(order_depth.buy_orders.items())[0]
-            if int(best_bid) > 10000:
-                orders.append(Order("PRODUCT", best_bid, -best_bid_amount)) # sell order
+    def __init__(self):
+        self.strategies = {
+            "SUDOWOODO": SudowoodoStrategy(),
+            "DROWZEE": DrowzeeStrategy(), 
+            "ABRA": AbraStrategy()
+        }
+    
+    def run(self, state):
+        result = {}
+        positions = getattr(state, 'positions', {})
         
-        result["PRODUCT"] = orders
+        for product, orderbook in state.order_depth.items():
+            current_position = positions.get(product, 0)
+            product_orders = self.strategies[product].get_orders(state, orderbook, current_position)
+            result[product] = product_orders
+        
         return result
