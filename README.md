@@ -46,19 +46,21 @@ git pull origin main
 
 You should see this screen after successfully completing the above steps,
 
-![image](https://github.com/user-attachments/assets/30a35287-158b-4981-bf29-f7124c407259)
+![image](https://github.com/user-attachments/assets/5c7c36a8-34c8-44ce-90a9-126275aa65b3)
 
-There are three sections on the GUI, 
-- Data Files
+There are five sections on the GUI, 
+- Trading Mode
+- Product Management
+- Strategy Configuration
 - Status & Logs
 - Interactive Results
 
-#### Data Files
+#### Trading Mode
+- **Single Product Mode**: If you want to test one product at a time you can use this. Clicking on this will directly open file explorer and let you choose the data files.
+- **Multi-Product Mode**: You can now trade multiple products at the same time using a single Strategy.py files. Clicking on this enables the **Add Product** and **Remove Product** buttons. Clicking **Add Product** will prompt you to enter the name of the product. **Please ensure you enter the correct name of the product with no spelling errors and also use this same name in your Strategy.py file**. Also, trying to run a single product in Multi-Product mode may not work. Use Single Product mode for that.
 
-- **Load Price Data**: Clicking this will open your file explorer. Navigate to wherever you cloned AlgoTradingBacktester and you should find `/data/prices.csv`
-- **Load Trades Data**: Same as above but the file is called `/data/trades.csv`
-- **Load Strategy**: Same as above but the file is called `Strategy.py`. Make your changes in this file and upload it to the backtester.
-- **Run Backtest**: Self-explanatory
+#### Product Management
+- You can select the products you want to remove here and also view what files were selected for the prices data and the trades data.
 
 #### Status & Logs
 Will display any errors you might encounter during the backtesting. You may also find errors in the terminal. If you can't figure it out then ask a mentor.
