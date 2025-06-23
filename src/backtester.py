@@ -356,6 +356,7 @@ class MultiProductBacktester:
             state = type("State", (), {})()
             state.timestamp = ts
             state.order_depth = {product: self.orderbooks[product] for product in self.products}
+            state.positions = self.positions
 
             # Get orders from trader
             orders_dict = self.trader.run(state)

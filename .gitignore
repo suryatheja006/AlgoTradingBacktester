@@ -8,3 +8,5 @@ venv/
 
 # VSCode settings (optional)
 .vscode/
+
+.data/test_data/
