@@ -10,3 +10,4 @@ venv/
 .vscode/
 
 */test_data/
+data/test_data/
