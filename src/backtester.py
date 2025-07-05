@@ -129,7 +129,16 @@ class PositionTracker:
         return total_cost / total_qty if total_qty > 0 else 0.0
 
 class MultiProductBacktester:
-    POSITION_LIMIT = 50
+    POSITION_LIMIT = {
+        "SHINX": 50,
+        "LUXRAY": 250,
+        "JOLTEON": 350,
+        "ASH": 60,
+        "MISTY": 100,
+        "SUDOWOODO": 50,
+        "ABRA": 50,
+        "DROWZEE": 50
+    }
 
     def __init__(self, product_data_paths: Dict[str, Dict[str, str]], trader):
         """
@@ -213,7 +222,7 @@ class MultiProductBacktester:
         best_ask = min(orderbook.sell_orders.keys())
         return (best_bid + best_ask) / 2
 
-    def match_orders(self, orders: List[Order], timestamp):
+    def match_orders(self, orders: List[Order], timestamp, max_pos):
         """Match orders for all products at given timestamp"""
         # Group orders by product
         orders_by_product = {}
@@ -226,9 +235,9 @@ class MultiProductBacktester:
                 continue
                 
             market_trades = self.trades[product].get(timestamp, [])
-            self._match_product_orders(product, product_orders, market_trades)
+            self._match_product_orders(product, product_orders, market_trades, max_pos)
 
-    def _match_product_orders(self, product, orders: List[Order], market_trades: List[Trade]):
+    def _match_product_orders(self, product, orders: List[Order], market_trades: List[Trade], max_pos):
         """Match orders for a specific product"""
         orderbook = self.orderbooks[product]
         position_tracker = self.position_trackers[product]
@@ -240,12 +249,18 @@ class MultiProductBacktester:
             # Enforce position limits
             current_position = self.positions[product]
             if order.quantity > 0:
-                max_allowed = self.POSITION_LIMIT - current_position
+                if max_pos:
+                    max_allowed = max_pos - current_position
+                else:
+                    max_allowed = self.POSITION_LIMIT[product] - current_position
                 if max_allowed <= 0:
                     continue
                 qty_to_fill = min(qty_to_fill, max_allowed)
             else:
-                max_allowed = current_position + self.POSITION_LIMIT
+                if max_pos:
+                    max_allowed = current_position + max_pos
+                else:
+                    max_allowed = current_position + self.POSITION_LIMIT[product]
                 if max_allowed <= 0:
                     continue
                 qty_to_fill = min(qty_to_fill, max_allowed)
@@ -359,7 +374,7 @@ class MultiProductBacktester:
             state.positions = self.positions
 
             # Get orders from trader
-            orders_dict = self.trader.run(state)
+            orders_dict, max_pos = self.trader.run(state)
             
             # Flatten orders from all products
             all_orders = []
@@ -367,7 +382,7 @@ class MultiProductBacktester:
                 all_orders.extend(product_orders)
 
             # Match orders
-            self.match_orders(all_orders, ts)
+            self.match_orders(all_orders, ts, max_pos)
 
             # Calculate and track metrics for each product
             overall_realized_pnl = 0

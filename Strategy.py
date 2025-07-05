@@ -92,9 +92,9 @@ class AbraStrategy(BaseClass):
             stddev_price = statistics.stdev(self.prices[-self.lookback:])
             z_score = (mid_price - mean_price) / stddev_price
             if z_score > self.z_threshold:
-                orders.append(Order(self.product_name, best_bid, -5))
+                orders.append(Order(self.product_name, best_bid, -7))
             elif z_score < -self.z_threshold:
-                orders.append(Order(self.product_name, best_ask, 5))
+                orders.append(Order(self.product_name, best_ask, 7))
             elif abs(z_score) < self.z_mm_threshold:
                 return self.market_make(mid_price, position)
         elif len(self.prices) <= self.lookback:
@@ -104,11 +104,12 @@ class AbraStrategy(BaseClass):
     def market_make(self, mid_price, position):
         orders = []
         adjusted_mid_price = mid_price + self.skew_factor*position
-        orders.append(Order(self.product_name, adjusted_mid_price - 2, 5))
-        orders.append(Order(self.product_name, adjusted_mid_price + 2, -5))
+        orders.append(Order(self.product_name, adjusted_mid_price - 2, 7))
+        orders.append(Order(self.product_name, adjusted_mid_price + 2, -7))
         return orders
 
 class Trader:
+    MAX_LIMIT = 0 # for single product mode only, don't remove
     def __init__(self):
         self.strategies = {
             "SUDOWOODO": SudowoodoStrategy(),
@@ -119,10 +120,11 @@ class Trader:
     def run(self, state):
         result = {}
         positions = getattr(state, 'positions', {})
-        
+        if len(self.strategies) == 1: self.MAX_LIMIT= self.strategies["PRODUCT"].max_position # for single product mode only, don't remove
+
         for product, orderbook in state.order_depth.items():
             current_position = positions.get(product, 0)
             product_orders = self.strategies[product].get_orders(state, orderbook, current_position)
             result[product] = product_orders
         
-        return result
+        return result, self.MAX_LIMIT
